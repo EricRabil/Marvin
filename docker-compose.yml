@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  marvin:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - /marvin/node_modules
+      - /marvin/.yarn-cache

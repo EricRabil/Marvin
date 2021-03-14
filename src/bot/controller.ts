@@ -12,6 +12,7 @@ import { DeleteReply } from "./native/delete-reply";
 import ERLog from "../util/log";
 import { BotStatus } from "./plugins/bot-status";
 import { DefaultsManager } from "./native/defaults";
+import { Grades } from "./plugins/grades";
 
 const Log = ERLog("DiscordController");
 
@@ -51,6 +52,7 @@ export default class DiscordController {
         this.loadPlugin(new Starboard());
         this.loadPlugin(new BotStatus());
         this.loadPlugin(new Eval());
+        this.loadPlugin(new Grades());
     }
 
     private async loadPlugin(plugin: any) {

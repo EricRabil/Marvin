@@ -1,28 +1,30 @@
+import { parser } from "discord-markdown";
 export interface CodeAnalysis {
     language: string;
     code: string;
+    additional: CodeAnalysis[];
 }
 
 export function parseCode(code: string): CodeAnalysis {
-    let rawLanguage: string, bits: string[];
-
     if (code.startsWith("```")) {
-        rawLanguage = code.split("\n")[0].slice(3).trim();
-        bits = code.split("\n");
+        const rawParsed = parser(code);
 
-        bits.splice(0, 1);
-        bits.splice(bits.length - 1);
+        const [ topBlock, ...additional ] = rawParsed.filter(b => b.type === "codeBlock").map(({ lang, content }) => ({ language: lang, code: content, additional: [] }));
 
-        code = bits.join("\n");
+        return {
+            ...topBlock,
+            additional
+        };
     } else {
         const parts = code.split(" ");
-        if (parts.length === 1) return { language: code, code };
-        rawLanguage = parts[0];
-        code = parts.slice(1).join(" ");
-    }
+        if (parts.length === 1) return { language: code, code, additional: [] };
 
-    return {
-        language: rawLanguage.toLowerCase(),
-        code
-    };
+        code = parts.slice(1).join(" ");
+
+        return {
+            language: parts[0].toLowerCase(),
+            code,
+            additional: []
+        };
+    }
 }

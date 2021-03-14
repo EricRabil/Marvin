@@ -25,7 +25,7 @@ function inspectResult(res: any, depth = 5): string {
     else return result;
 }
 
-async function execute(command: string, env: object = {}): Promise<string[]> {
+async function execute(command: string, env: object = {}, stdin?: string): Promise<string[]> {
     const child = spawn(command, {
         env: {
             PATH: process.env.PATH,
@@ -38,22 +38,32 @@ async function execute(command: string, env: object = {}): Promise<string[]> {
     child.stderr.setEncoding("utf8");
     child.stdout.setEncoding("utf8");
 
+    if (stdin) child.stdin.write(stdin);
+    child.stdin.write("\n");
+
     const output: string[] = [];
 
     child.stdout.on("data", chunk => output.push(chunk));
     child.stderr.on("data", chunk => output.push(chunk));
 
+    const termination = setTimeout(() => {
+        output.push("Terminated due to timeout.");
+        child.kill("SIGKILL");
+    }, 60000);
+
     await new Promise(resolve => child.once("close", resolve));
+
+    clearTimeout(termination);
 
     return output.join("\n").match(/(.|\n){1,1900}/g) || [];
 }
 
-async function runCode(bin: string, code: string, ext: string = bin) {
+async function runCode(bin: string, code: string, ext: string = bin, stdin?: string) {
     const tmpName = tmpFile(ext);
 
     await fs.writeFile(tmpName, code);
 
-    const result = await execute(`${bin} ${tmpName}`);
+    const result = await execute(`${bin} ${tmpName}`, {}, stdin);
 
     await fs.unlink(tmpName);
 
@@ -77,24 +87,24 @@ async function evaluateJavaScript(code: string, message: CommandoMessage): Promi
     }
 }
 
-const runners: Record<string, (code: string, message: CommandoMessage) => Promise<string[]>> = {
-    py: code => runCode("python3", code, "py"),
-    python: code => runCode("python3", code, "py"),
-    php: code => runCode("php", code),
-    shit: code => runCode("php", code),
-    rb: code => runCode("ruby", code, "rb"),
-    ruby: code => runCode("ruby", code, "rb"),
-    ts: code => runCode("ts-node", code, "ts"),
-    typescript: code => runCode("ts-node", code, "ts"),
-    sh: code => runCode("sh", code, "sh"),
-    bash: code => runCode("bash", code, "sh"),
-    zsh: code => runCode("zsh", code, "sh"),
-    go: code => runCode("go run", code, "go"),
-    perl: code => runCode("perl", code, "pl"),
-    swift: code => runCode("swift", code, "swift"),
-    js: code => execute(`node ${DEDICATED_JS_RUNNER}`, { SRC_STRING: code }),
+const runners: Record<string, (code: string, message: CommandoMessage, stdin?: string) => Promise<string[]>> = {
+    py: (code, _, stdin) => runCode("python3", code, "py", stdin),
+    python: (code, _, stdin) => runCode("python3", code, "py", stdin),
+    php: (code, _, stdin) => runCode("php", code, "php", stdin),
+    shit: (code, _, stdin) => runCode("php", code, "php", stdin),
+    rb: (code, _, stdin) => runCode("ruby", code, "rb", stdin),
+    ruby: (code, _, stdin) => runCode("ruby", code, "rb", stdin),
+    ts: (code, _, stdin) => runCode("ts-node", code, "ts", stdin),
+    typescript: (code, _, stdin) => runCode("ts-node", code, "ts", stdin),
+    sh: (code, _, stdin) => runCode("sh", code, "sh", stdin),
+    bash: (code, _, stdin) => runCode("bash", code, "sh", stdin),
+    zsh: (code, _, stdin) => runCode("zsh", code, "sh", stdin),
+    go: (code, _, stdin) => runCode("go run", code, "go", stdin),
+    perl: (code, _, stdin) => runCode("perl", code, "pl", stdin),
+    swift: (code, _, stdin) => runCode("swift", code, "swift", stdin),
+    js: (code, _, stdin) => execute(`node ${DEDICATED_JS_RUNNER}`, { SRC_STRING: code }, stdin),
     jsx: (code, message) => evaluateJavaScript(code, message),
-    applescript: code => runCode("osascript", code, "scpt")
+    applescript: (code, _, stdin) => runCode("osascript", code, "scpt", stdin)
 };
 
 @DPlugin("eval")
@@ -103,15 +113,15 @@ export class Eval extends BaseDPlugin {
     @DCommand("eval", "Evaluates code in a given language")
     @DEntitlement("eval")
     async doEval(message: CommandoMessage, rawCode: string) {
-        const { language, code } = parseCode(rawCode);
+        const { language, code, additional: [ stdin ] } = parseCode(rawCode);
 
-        async function go(lang: string, runner: (code: string, message: CommandoMessage) => Promise<string[]>, message: CommandoMessage) {
+        async function go(lang: string, runner: (code: string, message: CommandoMessage, stdin?: string) => Promise<string[]>, message: CommandoMessage) {
             const status = await message.channel.send(embed(
                 title("Processing"),
                 description("I'll be done with your code in a jiffy.")
             ));
 
-            const result = (await runner(code, message)).map(res => `\`\`\`${lang}\n${res}\n\`\`\``);
+            const result = (await runner(code, message, stdin?.code)).map(res => `\`\`\`${lang}\n${res}\n\`\`\``);
 
             if (result.length <= 1) {
                 await status.edit({

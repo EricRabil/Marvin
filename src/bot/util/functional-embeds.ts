@@ -4,7 +4,7 @@ type DeclarativeEmbedFn = ((embed: MessageEmbed) => MessageEmbed) | null
 
 type DeclarativeEmbed = DeclarativeEmbedFn | DeclarativeEmbed[]
 
-export const field = (name: string, value: string, inline?: boolean): DeclarativeEmbed => (embed: MessageEmbed) => value ? embed.addField(name, value, inline) : embed;
+export const field = (name: string, value?: string, inline?: boolean): DeclarativeEmbed => (embed: MessageEmbed) => value ? embed.addField(name, value, inline) : embed;
 export const title = (title: string): DeclarativeEmbed => embed => embed.setTitle(title);
 export const description = (desc: string): DeclarativeEmbed => embed => embed.setDescription(desc);
 export const author = (name: string, iconURL?: string, url?: string): DeclarativeEmbed => embed => embed.setAuthor(name, iconURL, url);
