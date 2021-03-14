@@ -14,6 +14,8 @@ COPY package.json .
 COPY yarn.lock .
 RUN yarn
 
+RUN apt-get update && apt-get install -y python php ruby golang perl
+
 ADD . ./
 
 RUN yarn build

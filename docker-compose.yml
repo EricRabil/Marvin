@@ -4,8 +4,24 @@ services:
   marvin:
     build: .
     restart: unless-stopped
+    environment:
+      - REDIS_HOST=redis
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
     env_file:
       - .env
     volumes:
       - /marvin/node_modules
       - /marvin/.yarn-cache
+    depends_on: 
+      - redis
+      - db
+  redis:
+    image: "redis:alpine"
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=marvinjs
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
