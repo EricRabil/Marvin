@@ -1,7 +1,9 @@
 import { BaseEntity, Column, Entity, Unique } from "typeorm";
 import { createNodeRedisClient } from "handy-redis";
 
-const client = createNodeRedisClient();
+const client = createNodeRedisClient({
+    host: process.env.REDIS_HOST
+});
 
 @Entity()
 @Unique(["plugin", "key"])
