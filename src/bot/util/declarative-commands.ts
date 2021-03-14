@@ -112,7 +112,7 @@ export function compileCommandGroup<T extends { constructor: Function }>(clazz: 
                 const missing = entitlementValidation.filter(([ , entitled ]) => !entitled).map(([ ent ]) => `${ent.entitlement}${createPermissionDescriptor(ent)}` );
                 if (missing.length) {
                     await message.reply(`You're missing the following entitlements: ${list(missing)}`);
-                    this.client.emit("command:onDenied", message, info);
+                    this.client.emit("command:onDenied" as any, message, info);
                     return null;
                 }
             }

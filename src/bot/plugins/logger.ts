@@ -5,6 +5,4 @@ import { BaseDPlugin, DCommandDenied, DPlugin } from "../util/declarative-plugin
 @DPlugin("logger")
 @DCommandGroup("logger")
 export class Logger extends BaseDPlugin {
-    @DCommandDenied
-    commandDenied(message: CommandoMessage, info: CompiledComm)
 }
