@@ -1,9 +1,6 @@
 import { GuildMember, User } from "discord.js";
 import { Argument as CommandoArgument, Command as CommandoCommand, CommandGroup as CommandoGroup, CommandoClient, CommandoMessage } from "discord.js-commando";
-import { has } from "../../util/reflect";
-import { DArgumentType } from "../util/argument-type";
-import { DArgument, BaseDCommandGroup, DCommand, DCommandGroup, CompiledEntitlement, DEntitlement } from "../util/declarative-commands";
-import { embed, field, signature, title } from "../util/functional-embeds";
+import { DArgumentType, DArgument, BaseDCommandGroup, DCommand, DCommandGroup, CompiledEntitlement, DEntitlement, embed, field, signature, title, utils } from "discord-botkit";
 
 function commandText(client: CommandoClient, command: CommandoCommand | string) {
     command = typeof command === "string" ? command : command.name;
@@ -83,7 +80,7 @@ export class GeneralComands extends BaseDCommandGroup {
 
     private get commandToEntitlements(): Record<string, CompiledEntitlement[]> {
         return this.allCommands.reduce((acc, command) => Object.assign(acc, {
-            [command.name]: has(command, "entitlements") ? command.entitlements : []
+            [command.name]: utils.has(command, "entitlements") ? command.entitlements : []
         }), {});
     }
 }

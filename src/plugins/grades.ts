@@ -2,10 +2,7 @@ import { Course, GradebookEntry, GradeMapping } from "@bbdash/shared";
 import Statsy from "@erics-world/statsy";
 import { StatsyStream } from "@erics-world/statsy/dist/stream";
 import { TextChannel } from "discord.js";
-import { CommandoMessage } from "discord.js-commando";
-import { DCommand, DCommandGroup } from "../util/declarative-commands";
-import { BaseDPlugin, DPlugin, DPluginLoaded } from "../util/declarative-plugins";
-import { embed, field, title } from "../util/functional-embeds";
+import { DCommandGroup, BaseDPlugin, DPlugin, DPluginLoaded, embed, field, title } from "discord-botkit";
 
 function convertDisplayGrade(entry: GradebookEntry): number | null {
     if (!entry.displayGrade) return null;

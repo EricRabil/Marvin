@@ -6,10 +6,7 @@ import fs from "fs-extra";
 import { tmpdir } from "os";
 import { join, resolve } from "path";
 import { inspect } from "util";
-import { parseCode } from "../util/code-analysis";
-import { DCommand, DCommandGroup, DEntitlement } from "../util/declarative-commands";
-import { BaseDPlugin, DPlugin } from "../util/declarative-plugins";
-import { description, embed, title } from "../util/functional-embeds";
+import { parseCode, BaseDPlugin, DPlugin, DCommand, DCommandGroup, DEntitlement, title, embed, description } from "discord-botkit";
 
 const DEDICATED_JS_RUNNER = resolve(__dirname, "js-runner.js");
 

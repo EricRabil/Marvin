@@ -1,8 +1,6 @@
 import { ActivityType, PresenceData } from "discord.js";
 import { CommandoMessage } from "discord.js-commando";
-import { parseCode } from "../util/code-analysis";
-import { DCommand, DCommandGroup, DefineEntitlement } from "../util/declarative-commands";
-import { BaseDPlugin, DPlugin, DPluginLoaded } from "../util/declarative-plugins";
+import { parseCode, BaseDPlugin, DPlugin, DPluginLoaded, DCommand, DCommandGroup, DefineEntitlement } from "discord-botkit";
 
 const ActivityTypes: ActivityType[] = ["PLAYING", "STREAMING", "LISTENING", "WATCHING", "CUSTOM_STATUS", "COMPETING"];
 

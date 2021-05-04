@@ -1,6 +1,5 @@
 import { CommandoMessage } from "discord.js-commando";
-import { DCommand, DCommandGroup } from "../util/declarative-commands";
-import { embed, field, title } from "../util/functional-embeds";
+import { DCommand, DCommandGroup, embed, field, title } from "discord-botkit";
 
 @DCommandGroup("debug")
 export class DebugCommands {

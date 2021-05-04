@@ -1,6 +1,7 @@
 {
-  "name": "Marvin",
+  "name": "marvin",
   "version": "1.0.0",
+  "private": true,
   "description": "Eric's personal Discord bot",
   "main": "dist/index.js",
   "repository": "https://github.com/EricRabil/Marvin.git",
@@ -10,10 +11,6 @@
     "build": "tsc -p ."
   },
   "devDependencies": {
-    "@types/bunyan": "^1.8.6",
-    "@types/bunyan-format": "^0.2.3",
-    "@types/common-tags": "^1.8.0",
-    "@types/dotenv": "^8.2.0",
     "@types/fs-extra": "^9.0.7",
     "@types/node": "^14.14.31",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
@@ -24,17 +21,12 @@
   "dependencies": {
     "@bbdash/shared": "^1.0.0",
     "@erics-world/statsy": "^1.0.0",
-    "bunyan": "^1.8.15",
-    "bunyan-format": "^0.2.1",
-    "common-tags": "^1.8.0",
-    "discord-markdown": "^2.4.2",
-    "discord.js": "^12.5.1",
-    "discord.js-commando": "^0.12.2",
+    "discord-botkit": "^0.0.2",
+    "discord.js": "^12.5.3",
+    "discord.js-commando": "^0.12.3",
     "dotenv": "^8.2.0",
     "fs-extra": "^9.1.0",
-    "handy-redis": "^2.2.1",
     "pg": "^8.5.1",
-    "redis": "^3.0.2",
     "typeorm": "^0.2.31"
   }
 }

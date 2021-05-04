@@ -1,9 +1,6 @@
 import { Message, MessageReaction, TextChannel, User } from "discord.js";
 import { CommandoGuild, CommandoMessage } from "discord.js-commando";
-import { DArgumentType } from "../util/argument-type";
-import { DArgument, DCommand, DCommandGroup, DEntitlement } from "../util/declarative-commands";
-import { BaseDPlugin, DEvent, DPlugin } from "../util/declarative-plugins";
-import { author, description, embed, footer, image } from "../util/functional-embeds";
+import { DArgumentType, DArgument, DCommand, DCommandGroup, DEntitlement, BaseDPlugin, DEvent, DPlugin, author, description, embed, footer, image } from "discord-botkit";
 
 const star_reaction = "⭐";
 
